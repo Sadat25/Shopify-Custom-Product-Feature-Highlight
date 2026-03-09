@@ -1,0 +1,484 @@
+{%- liquid
+  assign animated = section.settings.enable_animation
+  assign animation_effect = section.settings.animation_effect
+  assign container_width = section.settings.container_width
+  assign image_layout = section.settings.layout
+-%}
+
+<style>
+    #shopify-section-{{ section.id }} {
+      --section-padding-top: {{ section.settings.padding_top }}px;
+      --section-padding-bottom: {{ section.settings.padding_bottom }}px;
+      --section-bg-color: {{ section.settings.background_color }};
+      --section-max-width: {{ section.settings.section_max_width }}px;
+      --column-gap: {{ section.settings.gap }}px;
+      --image-width: {{ section.settings.image_width }}%;
+      --image-radius: {{ section.settings.image_border_radius }}px;
+    }
+
+    /* SECTION */
+
+    .product-feature {
+      padding-top: var(--section-padding-top);
+      padding-bottom: var(--section-padding-bottom);
+      background: var(--section-bg-color);
+    }
+
+    .product-feature__container {
+      max-width: var(--section-max-width);
+      margin: 0 auto;
+      padding: 0 1.5rem;
+    }
+
+    /* WRAPPER */
+
+    .product-feature__wrapper {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--column-gap);
+      align-items: center;
+      flex-direction:
+      {% if image_layout == 'image_right' %}
+      row-reverse
+      {% else %}
+      row
+      {% endif %};
+    }
+
+    /* LEFT COLUMN */
+
+    .product-feature__left {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* IMAGE */
+
+    .product-feature__image-col {
+      width: 100%;
+    }
+
+    .product-feature__image-wrapper {
+      width: 100%;
+      overflow: hidden;
+      border-radius: var(--image-radius);
+      position: relative;
+
+      {% if section.settings.image_shadow_toggle %}
+      box-shadow: 0 20px 40px rgba(0,0,0,.1);
+      {% endif %}
+    }
+
+    .product-feature__image {
+      width: 100%;
+      height: auto;
+      display: block;
+      transition: transform .6s cubic-bezier(.165,.84,.44,1);
+    }
+
+    .product-feature__image-wrapper:hover .product-feature__image {
+      transform: scale(1.03);
+    }
+
+    /* BUTTON UNDER IMAGE */
+
+    .product-feature__btn {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      margin-top: 24px;
+    }
+
+    /* RIGHT COLUMN */
+
+    .product-feature__content-col {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      text-align: {{ section.settings.text_alignment_mobile }};
+    }
+
+    /* FEATURES */
+
+    .product-feature__list {
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
+    }
+
+    .product-feature__item {
+      display: flex;
+      gap: 1.25rem;
+      align-items: flex-start;
+    }
+
+    .product-feature__icon {
+      flex-shrink: 0;
+    }
+
+    .product-feature__icon--circle {
+      background: rgba(0,0,0,.05);
+      border-radius: 50%;
+      padding: .75rem;
+    }
+
+    .product-feature__item-title {
+  font-size: clamp(20px, 2vw, 24px);
+      font-weight: 600;
+      margin-bottom: .5rem;
+    }
+
+    .product-feature__item-text {
+      opacity: .8;
+      line-height: 1.6;
+    }
+
+    /* BUTTON */
+
+    .m-button {
+      padding: .75rem 2rem;
+      border-radius: 4px;
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    .m-button--primary { background:#000;color:#fff; }
+    .m-button--secondary { border:1px solid #000;color:#000; }
+    .m-button--white { background:#fff;color:#000; }
+    .m-button--link { text-decoration: underline; }
+
+    /* DESKTOP */
+
+    @media (min-width:768px){
+
+      .product-feature__left {
+        flex: 0 0 var(--image-width);
+        max-width: var(--image-width);
+      }
+
+      .product-feature__content-col {
+        text-align: {{ section.settings.text_alignment }};
+      }
+
+    }
+</style>
+
+<section class="product-feature" id="shopify-section-{{ section.id }}">
+  <div class="product-feature__container">
+    <div class="product-feature__wrapper">
+      <!-- LEFT -->
+
+      <div class="product-feature__left">
+        <div class="product-feature__image-col">
+          <div class="product-feature__image-wrapper">
+            {% if section.settings.image != blank %}
+              <img
+                src="{{ section.settings.image | image_url: width:1200 }}"
+                class="product-feature__image"
+                loading="lazy"
+                width="{{ section.settings.image.width }}"
+                height="{{ section.settings.image.height }}"
+              >
+
+            {% else %}
+              {{ 'product-1' | placeholder_svg_tag }}
+            {% endif %}
+          </div>
+        </div>
+
+        {% if section.settings.button_label != blank %}
+          <div class="product-feature__btn">
+            <a
+              href="{{ section.settings.button_link }}"
+              class="m-button {{ section.settings.button_style | replace: 'sf__btn-primary', 'm-button--primary' | replace: 'sf__btn-secondary', 'm-button--secondary' | replace: 'sf__btn-link', 'm-button--link' | replace: 'sf__btn-white', 'm-button--white' }} {{ section.settings.button_size }}"
+            >
+              {{ section.settings.button_label }}
+            </a>
+          </div>
+        {% endif %}
+      </div>
+
+      <!-- RIGHT -->
+
+      <div class="product-feature__content-col">
+        <div class="product-feature__list">
+          {% for block in section.blocks %}
+            <div class="product-feature__item">
+              <div
+                class="
+                  product-feature__icon
+                  {% if block.settings.enable_circle_icon_background %}
+                  product-feature__icon--circle
+                  {% endif %}
+                "
+                style="width:{{ block.settings.icon_size }}px;height:{{ block.settings.icon_size }}px"
+              >
+                {% if block.settings.icon_image != blank %}
+                  <img
+                    src="{{ block.settings.icon_image | image_url: width:100 }}"
+                    width="{{ block.settings.icon_size }}"
+                    height="{{ block.settings.icon_size }}"
+                  >
+                {% endif %}
+              </div>
+
+              <div>
+                <h3 class="product-feature__item-title">
+                  {{ block.settings.title }}
+                </h3>
+
+                <div class="product-feature__item-text">
+                  {{ block.settings.text }}
+                </div>
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Product Feature Highlight",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "select",
+      "id": "layout",
+      "label": "Layout",
+      "options": [
+        { "value": "image_left", "label": "Image left" },
+        { "value": "image_right", "label": "Image right" }
+      ],
+      "default": "image_left"
+    },
+    {
+      "type": "select",
+      "id": "container_width",
+      "label": "Container width",
+      "options": [
+        { "value": "container", "label": "Fixed container" },
+        { "value": "full-width", "label": "Full width" }
+      ],
+      "default": "container"
+    },
+    {
+      "type": "range",
+      "id": "section_max_width",
+      "label": "Content max width (px)",
+      "min": 800,
+      "max": 1600,
+      "step": 20,
+      "default": 1200
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Padding top",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Padding bottom",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "gap",
+      "label": "Gap between columns",
+      "min": 20,
+      "max": 100,
+      "step": 5,
+      "default": 60
+    },
+    {
+      "type": "select",
+      "id": "text_alignment",
+      "label": "Text alignment (Desktop)",
+      "options": [
+        { "value": "left", "label": "Left" },
+        { "value": "center", "label": "Center" },
+        { "value": "right", "label": "Right" }
+      ],
+      "default": "left"
+    },
+    {
+      "type": "select",
+      "id": "text_alignment_mobile",
+      "label": "Text alignment (Mobile)",
+      "options": [
+        { "value": "left", "label": "Left" },
+        { "value": "center", "label": "Center" },
+        { "value": "right", "label": "Right" }
+      ],
+      "default": "left"
+    },
+    {
+      "type": "header",
+      "content": "Image Settings"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Product image"
+    },
+    {
+      "type": "range",
+      "id": "image_width",
+      "label": "Image width (%)",
+      "min": 30,
+      "max": 70,
+      "step": 1,
+      "default": 50
+    },
+    {
+      "type": "range",
+      "id": "image_border_radius",
+      "label": "Image border radius",
+      "min": 0,
+      "max": 50,
+      "step": 2,
+      "default": 0
+    },
+    {
+      "type": "checkbox",
+      "id": "image_shadow_toggle",
+      "label": "Enable image shadow",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Button Settings"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button label",
+      "default": "Shop Now"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button link"
+    },
+    {
+      "type": "select",
+      "id": "button_style",
+      "label": "Button style",
+      "options": [
+        { "value": "sf__btn-primary", "label": "Primary" },
+        { "value": "sf__btn-secondary", "label": "Secondary" },
+        { "value": "sf__btn-white", "label": "White" },
+        { "value": "sf__btn-link", "label": "Link" }
+      ],
+      "default": "sf__btn-primary"
+    },
+    {
+      "type": "select",
+      "id": "button_size",
+      "label": "Button size",
+      "options": [
+        { "value": "m-button--small", "label": "Small" },
+        { "value": "m-button--medium", "label": "Medium" },
+        { "value": "m-button--large", "label": "Large" }
+      ],
+      "default": "m-button--medium"
+    },
+    {
+      "type": "header",
+      "content": "Animations"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_animation",
+      "label": "Enable animation",
+      "default": true
+    },
+    {
+      "type": "select",
+      "id": "animation_effect",
+      "label": "Animation effect",
+      "options": [
+        { "value": "fade-in", "label": "Fade in" },
+        { "value": "slide-in", "label": "Slide in" }
+      ],
+      "default": "slide-in"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "feature",
+      "name": "Feature block",
+      "limit": 6,
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "icon_image",
+          "label": "Icon image"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "Feature Title"
+        },
+        {
+          "type": "richtext",
+          "id": "text",
+          "label": "Description",
+          "default": "<p>Share information about your product's unique features and benefits.</p>"
+        },
+        {
+          "type": "checkbox",
+          "id": "enable_circle_icon_background",
+          "label": "Enable circle icon background",
+          "default": false
+        },
+        {
+          "type": "range",
+          "id": "icon_size",
+          "label": "Icon size (px)",
+          "min": 20,
+          "max": 100,
+          "step": 2,
+          "default": 40
+        },
+        {
+          "type": "range",
+          "id": "spacing",
+          "label": "Bottom spacing",
+          "min": 0,
+          "max": 50,
+          "step": 2,
+          "default": 0
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Product Feature Highlight",
+      "blocks": [{ "type": "feature" }, { "type": "feature" }, { "type": "feature" }]
+    }
+  ]
+}
+{% endschema %}
