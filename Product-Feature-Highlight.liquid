@@ -16,23 +16,19 @@
       --image-radius: {{ section.settings.image_border_radius }}px;
     }
 
-    /* SECTION */
-
-    .product-feature {
+    #shopify-section-{{ section.id }} .product-feature {
       padding-top: var(--section-padding-top);
       padding-bottom: var(--section-padding-bottom);
       background: var(--section-bg-color);
     }
 
-    .product-feature__container {
+    #shopify-section-{{ section.id }} .product-feature__container {
       max-width: var(--section-max-width);
       margin: 0 auto;
       padding: 0 1.5rem;
     }
 
-    /* WRAPPER */
-
-    .product-feature__wrapper {
+    #shopify-section-{{ section.id }} .product-feature__wrapper {
       display: flex;
       flex-wrap: wrap;
       gap: var(--column-gap);
@@ -45,21 +41,17 @@
       {% endif %};
     }
 
-    /* LEFT COLUMN */
-
-    .product-feature__left {
+    #shopify-section-{{ section.id }} .product-feature__left {
       width: 100%;
       display: flex;
       flex-direction: column;
     }
 
-    /* IMAGE */
-
-    .product-feature__image-col {
+    #shopify-section-{{ section.id }} .product-feature__image-col {
       width: 100%;
     }
 
-    .product-feature__image-wrapper {
+    #shopify-section-{{ section.id }} .product-feature__image-wrapper {
       width: 100%;
       overflow: hidden;
       border-radius: var(--image-radius);
@@ -70,94 +62,84 @@
       {% endif %}
     }
 
-    .product-feature__image {
+    #shopify-section-{{ section.id }} .product-feature__image {
       width: 100%;
       height: auto;
       display: block;
       transition: transform .6s cubic-bezier(.165,.84,.44,1);
     }
 
-    .product-feature__image-wrapper:hover .product-feature__image {
+    #shopify-section-{{ section.id }} .product-feature__image-wrapper:hover .product-feature__image {
       transform: scale(1.03);
     }
 
-    /* BUTTON UNDER IMAGE */
-
-    .product-feature__btn {
+    #shopify-section-{{ section.id }} .product-feature__btn {
       width: 100%;
       display: flex;
       justify-content: center;
       margin-top: 24px;
     }
 
-    /* RIGHT COLUMN */
-
-    .product-feature__content-col {
+    #shopify-section-{{ section.id }} .product-feature__content-col {
       flex: 1;
       display: flex;
       flex-direction: column;
       text-align: {{ section.settings.text_alignment_mobile }};
     }
 
-    /* FEATURES */
-
-    .product-feature__list {
+    #shopify-section-{{ section.id }} .product-feature__list {
       display: flex;
       flex-direction: column;
       gap: 2rem;
     }
 
-    .product-feature__item {
+    #shopify-section-{{ section.id }} .product-feature__item {
       display: flex;
       gap: 1.25rem;
       align-items: flex-start;
     }
 
-    .product-feature__icon {
+    #shopify-section-{{ section.id }} .product-feature__icon {
       flex-shrink: 0;
     }
 
-    .product-feature__icon--circle {
+    #shopify-section-{{ section.id }} .product-feature__icon--circle {
       background: rgba(0,0,0,.05);
       border-radius: 50%;
       padding: .75rem;
     }
 
-    .product-feature__item-title {
-  font-size: clamp(20px, 2vw, 24px);
+    #shopify-section-{{ section.id }} .product-feature__item-title {
+      font-size: clamp(20px, 2vw, 24px);
       font-weight: 600;
       margin-bottom: .5rem;
     }
 
-    .product-feature__item-text {
+    #shopify-section-{{ section.id }} .product-feature__item-text {
       opacity: .8;
       line-height: 1.6;
     }
 
-    /* BUTTON */
-
-    .m-button {
+    #shopify-section-{{ section.id }} .m-button {
       padding: .75rem 2rem;
       border-radius: 4px;
       text-decoration: none;
       font-weight: 600;
     }
 
-    .m-button--primary { background:#000;color:#fff; }
-    .m-button--secondary { border:1px solid #000;color:#000; }
-    .m-button--white { background:#fff;color:#000; }
-    .m-button--link { text-decoration: underline; }
-
-    /* DESKTOP */
+    #shopify-section-{{ section.id }} .m-button--primary { background:#000;color:#fff; }
+    #shopify-section-{{ section.id }} .m-button--secondary { border:1px solid #000;color:#000; }
+    #shopify-section-{{ section.id }} .m-button--white { background:#fff;color:#000; }
+    #shopify-section-{{ section.id }} .m-button--link { text-decoration: underline; }
 
     @media (min-width:768px){
 
-      .product-feature__left {
+      #shopify-section-{{ section.id }} .product-feature__left {
         flex: 0 0 var(--image-width);
         max-width: var(--image-width);
       }
 
-      .product-feature__content-col {
+      #shopify-section-{{ section.id }} .product-feature__content-col {
         text-align: {{ section.settings.text_alignment }};
       }
 
